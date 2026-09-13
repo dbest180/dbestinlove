@@ -1,0 +1,24 @@
+- label: Watch on TikTok
+  sub: "@dbestinlove — new videos weekly"
+  url: https://www.tiktok.com/@dbestinlove
+  icon: tiktok
+  style: primary
+  external: true
+
+- label: Join the Community
+  sub: Weekly encouragement for the long haul
+  url: "#newsletter"
+  icon: mail
+  style: gold
+
+- label: Instagram
+  sub: Behind-the-scenes & daily life
+  icon: instagram
+  style: soon
+  badge: Soon
+
+- label: YouTube
+  sub: Longer stories & full conversations
+  icon: youtube
+  style: soon
+  badge: Soon
