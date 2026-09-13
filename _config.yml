@@ -6,9 +6,9 @@ description: >-
 author: The Plus One Project
 tiktok: https://www.tiktok.com/@dbestinlove
 
-# ↓ Replace USERNAME / REPO after you send them to me
-url: "https://USERNAME.github.io"
-baseurl: "/REPO"
+# GitHub Pages
+url: "https://dbest180.github.io"
+baseurl: "/dbestinlove"
 
 markdown: kramdown
 plugins:
@@ -18,3 +18,4 @@ exclude:
   - README.md
   - Gemfile
   - Gemfile.lock
+  - .github/
