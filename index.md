@@ -8,8 +8,9 @@ layout: default
   <div class="merge-bar" aria-hidden="true"></div>
   <p class="hero__tagline">10 Years Apart · Together Forever</p>
   <p class="hero__hook">
-    We met on Google+. We survived 10 years, 3 countries, and 3 years of
-    COVID. This is our love story.
+    We met in a comment section nobody remembers — one of us always typing too
+    late, the other always reading too early. Ten years, three countries, and
+    three years of a pandemic later, we are still choosing each other.
   </p>
 </header>
 
@@ -39,17 +40,26 @@ layout: default
 <section class="story section reveal">
   <h2 class="section-title">Our Story</h2>
 
-  We met in a comment section nobody remembers. Ten years, three countries,
-  and three years of COVID later — we got married.
+  <p>It started the way the best things do — by accident. A comment, a reply
+  nobody was supposed to answer, and then two people in two different time zones
+  talking at hours that made no sense to anyone but them.</p>
 
-  Different time zones. The same stubborn decision, made over and over:
-  *not yet, but not never.*
+  <p>What came next was mostly distance. Ten years of it. Three countries. Three
+  years where the world stayed home and we stayed apart — not because we had to,
+  but because we had already agreed on something better.</p>
 
-  [Watch the full story on TikTok →](https://www.tiktok.com/@dbestinlove)
+  <p>We said it to each other the way you say a vow long before you know that is
+  what it is: <em>not yet, but not never.</em></p>
+
+  <p>Somewhere in all that waiting, we stopped being each other's plus one and
+  became each other's home. Two flags. One story. And a wedding at the end of
+  the longest long distance either of us had ever run.</p>
+
+  <p><a class="text-link" href="https://www.tiktok.com/@dbestinlove" target="_blank" rel="noopener">Watch the full story on TikTok →</a></p>
 </section>
 
 <footer class="footer">
   <p><a href="https://www.tiktok.com/@dbestinlove" target="_blank" rel="noopener">TikTok</a></p>
   <p>© {{ site.time | date: "%Y" }} The Plus One Project</p>
-  <p>Made with 💛</p>
+  <p>Two flags, one story.</p>
 </footer>

@@ -1,13 +1,13 @@
 title: The Plus One Project
-tagline: 10 Years Apart. Together Forever.
+tagline: 10 Years Apart · Together Forever
 description: >-
-  We met on Google+. We survived 10 years, 3 countries, and 3 years of COVID apart.
-  This is our love story.
+  Two flags, one story. We met in a comment section nobody remembers, and spent
+  ten years, three countries, and three years of a pandemic apart. This is our love story.
 author: The Plus One Project
 tiktok: https://www.tiktok.com/@dbestinlove
 
 # GitHub Pages
-url: "https://dbest180.github.io/dbestinlove/"
+url: "https://dbest180.github.io"
 baseurl: "/dbestinlove"
 
 markdown: kramdown
@@ -16,6 +16,7 @@ plugins:
 
 exclude:
   - README.md
+  - HANDOFF.md
   - Gemfile
   - Gemfile.lock
   - .github/

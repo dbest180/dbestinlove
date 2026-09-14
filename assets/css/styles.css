@@ -1,6 +1,7 @@
 /* ==========================================================================
    The Plus One Project — v2
    Two flags. One story. White dominant. Red/black/blue as the merge.
+   Type: EB Garamond for the story, Jost for the interface.
    ========================================================================== */
 
 :root {
@@ -25,7 +26,7 @@
   --bg:        #FFFFFF;
 
   /* --- Type ------------------------------------------------------------ */
-  --display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --display: "EB Garamond", "Iowan Old Style", Georgia, serif;
   --ui:      "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
 
   /* --- Layout ---------------------------------------------------------- */
@@ -87,10 +88,10 @@ a:hover { color: var(--tt-red); }
 .section { margin-top: clamp(3.5rem, 10vw, 5.5rem); }
 .section-title {
   font-family: var(--display);
-  font-weight: 300;
-  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  font-weight: 500;
+  font-size: clamp(1.85rem, 6.4vw, 2.6rem);
   line-height: 1.15;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
   color: var(--ink);
   margin: 0 0 1.25rem;
 }
@@ -102,7 +103,7 @@ a:hover { color: var(--tt-red); }
 }
 .kicker {
   font-size: 0.72rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.36em;
   text-transform: uppercase;
   color: var(--ink-faint);
@@ -110,10 +111,10 @@ a:hover { color: var(--tt-red); }
 }
 .hero__title {
   font-family: var(--display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(3rem, 15vw, 7.5rem);
-  line-height: 0.92;
-  letter-spacing: -0.025em;
+  line-height: 0.95;
+  letter-spacing: -0.015em;
   margin: 0;
   color: var(--ink);
 }
@@ -131,19 +132,21 @@ a:hover { color: var(--tt-red); }
   border-radius: 2px;
 }
 .hero__tagline {
-  font-size: clamp(0.8rem, 2.6vw, 0.95rem);
-  font-weight: 300;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.15rem, 4.2vw, 1.5rem);
+  font-weight: 400;
+  letter-spacing: 0.005em;
   color: var(--ink-soft);
   margin: 0 0 2rem;
 }
 .hero__hook {
-  max-width: 30rem;
+  max-width: 32rem;
   margin: 0 auto;
+  font-family: var(--display);
   color: var(--ink-soft);
-  font-size: clamp(1rem, 2.8vw, 1.1rem);
-  font-weight: 300;
+  font-size: clamp(1.08rem, 3.1vw, 1.3rem);
+  font-weight: 400;
   line-height: 1.75;
 }
 
@@ -238,25 +241,34 @@ a:hover { color: var(--tt-red); }
 
 /* ---------- Story ---------- */
 .story p {
+  font-family: var(--display);
   color: var(--ink-soft);
-  margin: 0 0 1.25rem;
-  font-size: clamp(1rem, 2.8vw, 1.08rem);
-  font-weight: 300;
-  line-height: 1.8;
+  margin: 0 0 1.35rem;
+  font-size: clamp(1.06rem, 3vw, 1.22rem);
+  font-weight: 400;
+  line-height: 1.85;
+}
+/* The opening line carries the weight of the whole story */
+.story p:first-of-type {
+  font-size: clamp(1.18rem, 3.6vw, 1.45rem);
+  line-height: 1.7;
+  color: var(--ink);
 }
 .story em { color: var(--ink); font-style: italic; }
 .text-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.5rem;
+  margin-top: 1.25rem;
+  font-family: var(--ui);
   font-weight: 400;
-  font-size: 0.95rem;
-  letter-spacing: 0.01em;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--ink);
   text-decoration: none;
   border-bottom: 1px solid var(--tt-red);
-  padding-bottom: 2px;
+  padding-bottom: 3px;
   transition: color .2s ease, border-color .2s ease;
 }
 .text-link:hover { color: var(--tt-red); border-bottom-color: var(--ink); }
@@ -291,3 +303,4 @@ a:hover { color: var(--tt-red); }
 @media (prefers-reduced-motion: reduce) {
   .js .reveal { opacity: 1; transform: none; }
   * { animation: none !important; transition: none !important; }
+}
