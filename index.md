@@ -57,10 +57,10 @@ layout: default
   <h2 class="section-title">For anyone missing someone far away.</h2>
   <p class="signup__sub">You're not alone. Get weekly encouragement and LDR survival tips.</p>
 
-  <form class="signup__form" action="https://buttondown.email/api/emails/embed-subscribe/dbestinlove" method="post">
+  <form class="signup__form" action="https://buttondown.email/api/emails/embed-subscribe/dbestinlove">
     <label class="sr-only" for="email">Email address</label>
     <input id="email" name="email" type="email" inputmode="email"
-           autocomplete="email" placeholder="you@example.com" required>
+           autocomplete="email" placeholder="dbestinlove@gmail.com" required>
     <button type="submit">Join</button>
   </form>
   <p class="signup__note">No spam. Unsubscribe anytime.</p>
