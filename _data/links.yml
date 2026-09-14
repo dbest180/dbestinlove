@@ -5,12 +5,6 @@
   style: primary
   external: true
 
-- label: Join the Community
-  sub: Weekly encouragement for the long haul
-  url: "#newsletter"
-  icon: mail
-  style: gold
-
 - label: Instagram
   sub: Behind-the-scenes & daily life
   icon: instagram
