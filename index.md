@@ -57,7 +57,7 @@ layout: default
   <h2 class="section-title">For anyone missing someone far away.</h2>
   <p class="signup__sub">You're not alone. Get weekly encouragement and LDR survival tips.</p>
 
-  <form class="signup__form" action="REPLACE_WITH_FORM_ENDPOINT" method="post">
+  <form class="signup__form" action="https://buttondown.email/api/emails/embed-subscribe/dbestinlove" method="post">
     <label class="sr-only" for="email">Email address</label>
     <input id="email" name="email" type="email" inputmode="email"
            autocomplete="email" placeholder="you@example.com" required>
