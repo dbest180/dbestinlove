@@ -4,15 +4,13 @@ layout: default
 
 <header class="hero">
   <p class="kicker">A love story, told out loud</p>
-  <h1 class="hero__title">The Plus&nbsp;One Project</h1>
-  <p class="hero__tagline">10 Years Apart. Together Forever.</p>
+  <h1 class="hero__title">The Plus One<br>Project</h1>
+  <div class="merge-bar" aria-hidden="true"></div>
+  <p class="hero__tagline">10 Years Apart · Together Forever</p>
   <p class="hero__hook">
     We met on Google+. We survived 10 years, 3 countries, and 3 years of
     COVID. This is our love story.
   </p>
-  <div class="distance" aria-hidden="true">
-    <svg viewBox="0 0 260 24"><line x1="14" y1="12" x2="246" y2="12"/><circle cx="14" cy="12" r="5"/><circle cx="246" cy="12" r="5"/></svg>
-  </div>
 </header>
 
 <nav class="links reveal" id="links" aria-label="Find us online">
@@ -41,31 +39,13 @@ layout: default
 <section class="story section reveal">
   <h2 class="section-title">Our Story</h2>
 
-  We met in a comment section nobody remembers. Then came ten years of
-  screens — 3 a.m. calls, airport goodbyes, and a pandemic that kept us
-  apart for three of them.
+  We met in a comment section nobody remembers. Ten years, three countries,
+  and three years of COVID later — we got married.
 
-  Different countries. Different time zones. The same stubborn decision,
-  made over and over: *not yet, but not never.*
+  Different time zones. The same stubborn decision, made over and over:
+  *not yet, but not never.*
 
-  We got married. This is what we learned on the way.
-
-  [Read the full story →](#)
-</section>
-
-<section class="signup section reveal" id="newsletter">
-  <h2 class="section-title">For anyone missing someone far away.</h2>
-  <p class="signup__sub">You're not alone. Get weekly encouragement and LDR survival tips.</p>
-
-  <form class="signup__form"
-        action="https://buttondown.email/api/emails/embed-subscribe/dbestinlove"
-        method="post">
-    <label class="sr-only" for="email">Email address</label>
-    <input id="email" name="email" type="email" inputmode="email"
-           autocomplete="email" placeholder="you@example.com" required>
-    <button type="submit">Join</button>
-  </form>
-  <p class="signup__note">No spam. Unsubscribe anytime.</p>
+  [Watch the full story on TikTok →](https://www.tiktok.com/@dbestinlove)
 </section>
 
 <footer class="footer">
