@@ -1,231 +1,173 @@
-# HANDOFF — The Plus One Project (v2 Redesign)
+# HANDOFF — DBest In Love (v3)
 
 **Repo:** `dbest180/dbestinlove`
 **Live URL:** https://dbest180.github.io/dbestinlove/
-**Stack:** Jekyll → GitHub Pages via Actions
-**Goal:** Land v2 redesign (white-dominant, flag-merge palette) and remove all v1 remnants.
+**Stack:** Jekyll → GitHub Pages via Actions (`actions/jekyll-build-pages@v1`)
+**v3 goal:** Make the page convert TikTok traffic — a face, a hook, and a reason to follow.
 
 ---
 
-## Situation
+## 1. The name
 
-The site is running **v1** (cream palette, Fraunces/Inter, newsletter section) because v2 files were either never committed or committed with corruption. The creator has a local clone of the repo. Your job is to audit the working tree, fix the issues below, and leave it ready to push.
+**"The Plus One Project" is retired.** It read like a product launch, not a person telling you something true. Nobody's first instinct on reading it is *"who are these two?"* — which is the only question that matters when the traffic is arriving from a TikTok story.
 
-Do not redesign anything. Do not add features. Restore the intended v2 state only.
+**New name: DBest In Love.** It matches the handle `@dbestinlove`, so the bio link and the site reinforce one name instead of splitting recognition across two. Descriptor: **a 10-year long-distance (LDR) journey**.
 
----
+The name appears in more places than you'd expect. Change all of them together or the site goes inconsistent:
 
-## Canonical v2 State — What Each File Must Contain
+| File | Where |
+|---|---|
+| `_config.yml` | `title`, `author`, `description` |
+| `index.md` | `<h1 class="hero__title">`, footer copyright line |
+| `assets/css/styles.css` | header comment |
+| `assets/js/main.js` | header comment |
+| `README.md`, `HANDOFF.md` | docs |
 
-### 1. `index.html` — **must not exist**
+**Deliberately unchanged:** the repo name, `baseurl: /dbestinlove`, and therefore the live URL. Every link already sitting in a TikTok bio or a pinned comment keeps working. Don't rename the repo unless you're ready to break those.
 
-This is a leftover mockup from before we chose Jekyll. GitHub Pages serves `index.html` *before* `index.md`, so as long as it exists, the Jekyll homepage is invisible.
-
-**Action:** `git rm index.html` (or delete from working tree if untracked).
-
-Verify with: `ls index.html` → should error "No such file."
-
----
-
-### 2. `_layouts/default.html` — verify it matches v2
-
-Must contain:
-- `theme-color: #FFFFFF`
-- Font link for **Cormorant Garamond** (weights 300/400/500 + italic) and **Jost** (weights 200/300/400/500). **Not** Fraunces/Inter.
-- `{% seo %}` tag (Jekyll SEO plugin)
-- `{% include %}` free — content is `{{ content }}` inside `<main class="wrap">`
-- Skip link to `#links`
-- No `id="year"` span in footer (year is rendered via Liquid in `index.md`)
-
-If it still references Fraunces, Inter, or `assets/js/main.js` with a different path, replace with v2 version.
+**Open decision — where the descriptor lives.** "10 yr LDR journey" currently sits in the meta description (`_config.yml`), not on the page, because the hero already reads *"10 Years Apart"* one line under the title and repeating it reads redundant. If you want it visible, the natural slot is the kicker above the `<h1>` — swap `A love story, told out loud` for `A 10-Year LDR Journey`. Your call.
 
 ---
 
-### 3. `assets/css/styles.css` — **likely corrupted, check carefully**
+## 2. Where v3 starts
 
-**Known issue from the last commit:** v2 CSS was pasted on top of v1 without deleting v1, leaving an orphaned block. The corruption starts at a line like:
+Live and verified at commit `5617393`:
 
-```
+- White-dominant palette with flag-merge accents (T&T red → plum → Old Glory blue)
+- EB Garamond for story content, Jost for the interface
+- Hero → 3 link buttons → story → footer with Liquid-rendered year
+- `jekyll-seo-tag` wired; canonical and `og:url` correct
+- Build green in ~50 seconds
 
-}  color: var(--ink);
-background-color: var(--cream);
-
-```
-
-…and continues to the end of the file with v1 remnants (`.signup`, `.distance`, `.btn--gold`, `--cream`, `--terracotta`, `--maroon`, `--gold`, the `@media (min-width: 480px)` block for the signup form).
-
-**Action:** Truncate the file so it ends exactly at:
-
-```css
-@media (prefers-reduced-motion: reduce) {
-  .js .reveal { opacity: 1; transform: none; }
-  * { animation: none !important; transition: none !important; }
-}
-```
-
-Nothing after that. No trailing v1 code.
-
-Sanity checks on what remains:
-
-· :root defines --tt-red, --tt-black, --us-red, --us-blue, --white, --merge, --ink, --ink-soft, --ink-faint, --line, --bg, --display, --ui, --wrap, --r, --shadow-1, --shadow-2
-· No references to --cream, --terracotta, --maroon, --gold, --paper, --serif, --sans
-· .hero__title uses font-weight: 300 and clamp(3rem, 15vw, 7.5rem)
-· .merge-bar exists with the red→black→blue horizontal gradient
-· .btn--primary uses background: var(--merge)
-· No .signup rules anywhere
-· No .distance rules anywhere (that was v1)
-
-Run a quick grep to confirm: grep -nE "cream|terracotta|maroon|signup|Fraunces|Inter" assets/css/styles.css → should return zero matches.
+Everything below is a v3 addition. Nothing here is a bug fix — v2 is clean.
 
 ---
 
-4. index.md — verify it matches v2
+## 3. v3 action items
 
-Must contain:
+### P0 — the page has no faces
 
-· Front matter: layout: default
-· Hero header with <div class="merge-bar" aria-hidden="true"></div> between the <h1> and the tagline
-· Hero title is The Plus One<br>Project (two lines, <br> not &nbsp;)
-· Tagline uses · separator: 10 Years Apart · Together Forever
-· <nav class="links reveal" id="links"> with the Liquid {% for link in site.data.links %} loop
-· No <section class="signup"> — the newsletter block must be gone entirely
-· Story section ends with [Watch the full story on TikTok →](https://www.tiktok.com/@dbestinlove)
-· Footer uses Liquid year: © {{ site.time | date: "%Y" }} The Plus One Project
-· Footer has no id="year" span (that was v1's JS-injected year)
+`assets/img/hero.jpg` exists: a real **1408×768 JPEG, 604 KB** — and **nothing references it**. The site is a love story with no photograph of the two people in it. For someone who just watched a video and tapped the bio link, that's the single biggest reason to leave.
 
-Run: grep -n "signup\|newsletter\|Join the Community" index.md → should return zero matches.
+- [ ] Put a real photo above the fold
+- [ ] Recompress — 604 KB is heavy for a hero; target under 150 KB, and serve two widths
+- [ ] Write `alt` text describing the *moment*, not the file
+- [ ] Consider a second photo in the story section; faces are the whole product here
 
----
+### P0 — link previews are blank
 
-5. _data/links.yml — must have exactly 3 entries
+There is no `og:image`, so pasting the site into a bio, a DM, or a comment yields a bare text card. You are asking people to share a link that looks broken.
 
-Correct entries (in order):
+- [ ] Make a **1200×630** social card (a frame from the story works fine, with the name set in EB Garamond)
+- [ ] Add `image: /assets/img/og.jpg` to `_config.yml` — `jekyll-seo-tag` picks it up automatically
+- [ ] Test it by pasting the URL into a chat; don't assume
 
-```yaml
-- label: Watch on TikTok
-  sub: "@dbestinlove — new videos weekly"
-  url: https://www.tiktok.com/@dbestinlove
-  icon: tiktok
-  style: primary
-  external: true
+### P1 — two of the three buttons are dead
 
-- label: Instagram
-  sub: Behind-the-scenes & daily life
-  icon: instagram
-  style: soon
-  badge: Soon
+Instagram and YouTube render as dashed "Soon" placeholders with no `url:`. They sit directly beneath the primary CTA, in the most valuable real estate on the page, and they advertise absence. Pick one:
 
-- label: YouTube
-  sub: Longer stories & full conversations
-  icon: youtube
-  style: soon
-  badge: Soon
-```
+- [ ] Delete them until the accounts exist (cleanest), **or**
+- [ ] Point them at the TikTok profile for now, **or**
+- [ ] Change `sub:` to something that earns the click ("Coming once we're settled")
 
-Must NOT contain the "Join the Community" / mail / style: gold / url: "#newsletter" block. Delete it if present.
+### P1 — every path should end at the same action
 
-Run: grep -n "Join the Community\|newsletter\|mail" _data/links.yml → zero matches.
+The page has three exits to TikTok and one dead end at the bottom. Make the follow impossible to miss:
 
----
+- [ ] Keep the primary button in the merge gradient — it's working
+- [ ] Add the handle `@dbestinlove` as visible text somewhere; people search the handle, not the URL
+- [ ] Make sure the `text-link` CTA at the end of the story is genuinely the last thing people read
 
-6. _config.yml — verify
+### P1 — the story needs a "start here"
 
-Must contain:
+TikTok viewers arrive mid-story, out of order, with no idea which video was first. The story section is four paragraphs of prose with no entry point.
 
-```yaml
-url: "https://dbest180.github.io"
-baseurl: "/dbestinlove"
-plugins:
-  - jekyll-seo-tag
-```
+- [ ] Add a short chronology (years, or "chapter" markers) so a new arrival can orient in seconds
+- [ ] Consider naming the first video, so the page can say "start with this one"
 
-If baseurl or url are wrong, {% seo %} produces broken canonical/OG tags.
+### P2 — discoverability
 
----
+- [ ] Add `jekyll-sitemap` to `plugins:` in `_config.yml`
+- [ ] Add a `robots.txt`
+- [ ] In **Settings → Pages**, confirm the source is still *GitHub Actions*
 
-7. Gemfile — must exist
+### P2 — no 404 page
 
-Required for actions/jekyll-build-pages to resolve jekyll-seo-tag. Minimum:
+A bad link currently gets GitHub's default. A one-line `404.md` with the same layout and a link home is nearly free.
 
-```ruby
-source "https://rubygems.org"
-gem "jekyll", "~> 4.3"
-gem "jekyll-seo-tag", "~> 2.8"
-```
+### P2 — font payload
 
-If missing, the Pages Action fails on first build with "Could not find jekyll-seo-tag."
+Two Google Fonts families, nine weights, render-blocking. Fine now, worth revisiting if you add analytics and see a slow mobile load: self-host or subset to the weights actually used.
 
----
+### P3 — dead code
 
-8. _includes/icon.html — verify it has 4 cases
+`assets/js/main.js` still looks for `document.getElementById('year')` — a footer span v2 deleted. It's guarded and harmless, but it's the last v1 remnant in the tree.
 
-Must handle: tiktok, mail, instagram, youtube. Even though mail is no longer used by any link, keep it — harmless, and useful if a newsletter link returns.
+- [ ] Delete those two lines
 
----
+### P3 — no `.gitignore`
 
-9. .github/workflows/pages.yml — verify
+There isn't one. Run `jekyll build` locally and `_site/` appears untracked, one careless `git add -A` away from being committed.
 
-Must use actions/jekyll-build-pages@v1, actions/upload-pages-artifact@v3, actions/deploy-pages@v4. Permissions must include pages: write and id-token: write.
+- [ ] Add `.gitignore` with `_site/`, `.jekyll-cache/`, `.sass-cache/`
 
----
+### P3 — repo hygiene
 
-What NOT to Do
-
-· Do not re-add the newsletter section to index.md.
-· Do not re-add a "Join the Community" entry to links.yml.
-· Do not "improve" the palette, fonts, or layout. v2 is deliberate.
-· Do not touch _posts/ — doesn't exist yet, that's for later.
-· Do not rename files or restructure folders.
-· Do not create an index.html.
-
----
-
-Deliverable
-
-A working tree where:
-
-1. index.html does not exist
-2. styles.css ends cleanly at the prefers-reduced-motion block
-3. index.md has no signup section
-4. links.yml has 3 entries
-5. All greps listed above return zero matches
-
-Run these before declaring done:
+`HANDOFF.md` is committed to a **public** repo. It's in `_config.yml`'s `exclude:`, so it is *not* served as part of the site — but it is readable in the repo and its history. If you'd rather it weren't:
 
 ```bash
-# 1. No stale HTML
-ls index.html 2>&1 | grep -q "No such file" && echo "OK" || echo "FAIL: index.html present"
-
-# 2. No v1 CSS remnants
-! grep -qE "cream|terracotta|maroon|--signup|\.signup" assets/css/styles.css && echo "OK" || echo "FAIL: v1 CSS in styles.css"
-
-# 3. No newsletter in index.md
-! grep -q "signup\|newsletter\|Join the Community" index.md && echo "OK" || echo "FAIL: newsletter in index.md"
-
-# 4. links.yml has 3 entries
-[ "$(grep -c '^- label:' _data/links.yml)" = "3" ] && echo "OK" || echo "FAIL: links.yml entry count"
+git rm --cached HANDOFF.md && echo "HANDOFF.md" >> .gitignore
 ```
-
-All four must print OK.
-
-Do not commit or push. Return the working tree to the creator for review. They will run git add -A && git commit && git push.
 
 ---
 
-After Push — Expected Result
+## 4. Gotchas — each of these already cost time once
 
-· Action runs green in ~40s
-· https://dbest180.github.io/dbestinlove/ shows:
-  · White background with faint red/blue ambient gradient
-  · "The Plus One Project" in large thin Cormorant Garamond, two lines
-  · A horizontal red→black→blue merge bar under the title
-  · Tagline in spaced uppercase Jost
-  · TikTok button with red-to-blue gradient background
-  · Instagram and YouTube as dashed "Soon" placeholders
-  · "Our Story" section linking to TikTok
-  · No newsletter form
-  · Footer with TikTok link and Liquid-rendered year
+**1. kramdown does not parse markdown inside HTML blocks.** The default is `parse_block_html: false`. Text inside `<section>` or `<div>` is passed through raw: paragraphs never become `<p>`, and `[links](...)` stay literal. The story section is written as explicit `<p>` and `<em>` for exactly this reason. To use markdown inside HTML, add `markdown="1"` to the tag, or set `parse_block_html: true` in `_config.yml`.
 
-If any of those are false, the corresponding file above is still wrong.
+**2. `url` must not include `baseurl`.** It's `url: "https://dbest180.github.io"` + `baseurl: "/dbestinlove"`. Put the path in both and every canonical and `og:url` becomes `/dbestinlove/dbestinlove`. This was live once.
 
+**3. Never add an `index.html`.** GitHub Pages serves `index.html` *before* `index.md`, which hides the entire Jekyll homepage with no error anywhere. That exact file was the original v1 bug — 146 lines of mockup silently winning over the real site.
+
+**4. Check `git status -sb` before pushing.** `main` has already diverged once: the local clone was 6 commits behind *and* 1 ahead, with both sides having independently "fixed" the same problems. A plain push gets rejected; a force push would have destroyed the other side. The move that loses nothing is `git reset --soft origin/main` then commit — it replays your tree on top of the remote and stays a fast-forward. **Never `git push --force` to this branch.**
+
+**5. No Ruby in the agent environment.** Jekyll isn't installed, so there's no local preview — the loop is push → watch the Action → read the live URL. Run `gh run watch` to follow a build. For a real local preview:
+
+```bash
+bundle install
+bundle exec jekyll serve --baseurl ""
 ```
+
+The empty `--baseurl` matters, or every asset 404s on localhost.
+
+**6. A `Gemfile` is not load-bearing.** An earlier version of this document claimed the build fails on `jekyll-seo-tag` without one — it doesn't; several builds passed before it existed. Keep it for version pinning, but don't debug builds as if it were required.
+
+**7. `{% seo %}` reads `_config.yml`, not the page.** Title, description, and image all come from config unless overridden in front matter. Changing the name there changes every share preview.
+
+---
+
+## 5. What not to do
+
+- **Don't re-add the newsletter section.** Its removal in v2 was deliberate. The follow action is TikTok; a signup form is a second, weaker ask.
+- **Don't add an `index.html`.** Ever. See gotcha 3.
+- **Don't hardcode the year** in the footer. `{{ site.time | date: "%Y" }}` is already correct.
+- **Don't rename the repo or `baseurl`** without accepting that old links break.
+- **Don't commit `_site/`.**
+- **Don't swap the type back.** EB Garamond for story, Jost for interface is the v3 decision — the split is what makes the page read like writing rather than an app.
+
+---
+
+## 6. Definition of done for v3
+
+- [ ] A real photo above the fold
+- [ ] The social card renders in a link preview
+- [ ] No dead "Soon" buttons
+- [ ] Sitemap and 404 in place
+- [ ] Build green, and the live URL opened by hand — not just the Action log
+
+```bash
+# catches a half-finished rename
+grep -rin "the plus one project" --exclude-dir=.git --exclude-dir=_site --exclude=HANDOFF.md .
+```
+
+Search the bare phrase `plus one` instead and you'll get one hit in `index.md`: *"we stopped being each other's plus one and became each other's home."* That one is deliberate — it's a common noun, it's a good line, and it reads true under any name. Leave it.

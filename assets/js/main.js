@@ -1,4 +1,4 @@
-// The Plus One Project — progressive enhancement only.
+// DBest In Love — progressive enhancement only.
 (function () {
   'use strict';
 

@@ -4,7 +4,7 @@ layout: default
 
 <header class="hero">
   <p class="kicker">A love story, told out loud</p>
-  <h1 class="hero__title">The Plus One<br>Project</h1>
+  <h1 class="hero__title">DBest In<br>Love</h1>
   <div class="merge-bar" aria-hidden="true"></div>
   <p class="hero__tagline">10 Years Apart · Together Forever</p>
   <p class="hero__hook">
@@ -60,6 +60,6 @@ layout: default
 
 <footer class="footer">
   <p><a href="https://www.tiktok.com/@dbestinlove" target="_blank" rel="noopener">TikTok</a></p>
-  <p>© {{ site.time | date: "%Y" }} The Plus One Project</p>
+  <p>© {{ site.time | date: "%Y" }} DBest In Love</p>
   <p>Two flags, one story.</p>
 </footer>
