@@ -14,7 +14,7 @@
 | Dead "Soon" buttons | Instagram and YouTube entries removed from `_data/links.yml`. Only TikTok remains. Re-add entries there (with a `url:`) once those accounts exist — that's the only file that needs touching. |
 | Visible handle | Already satisfied — `sub:` on the TikTok button reads `@dbestinlove — new videos weekly`. No action was needed. |
 | Hero photo (P0) | Implemented, but with a **stand-in image**, not a photo of the couple — see §2. Full-bleed above the `<h1>`, `srcset` at 700w/1400w, recompressed to 86 KB / 31 KB from a 604 KB original. |
-| Social card (P0) | `image: /assets/img/og.jpg` added to `_config.yml`; `jekyll-seo-tag` picks it up automatically. 1200×630, 76 KB, cropped from the same stand-in photo. Not yet verified in an actual link-preview test — see §2. |
+| Social card (P0) | **Was silently broken; now fixed.** `image:` at the top level of `_config.yml` is never read by `jekyll-seo-tag` — see gotcha 6 — so no `og:image` was emitted at all and `twitter:card` fell back to `summary`. Moved into `_config.yml` `defaults:`. Verified live: `og:image` points at the 1200×630 `og.jpg` and `twitter:card` is now `summary_large_image`. |
 | Dead code (P3) | The `document.getElementById('year')` block removed from `assets/js/main.js` — the footer already uses `{{ site.time \| date: "%Y" }}` via Liquid, so this never fired. |
 | `.gitignore` (P3) | Added: `_site/`, `.jekyll-cache/`, `.sass-cache/`. |
 | `robots.txt` (P2) | Added: `User-agent: *` / `Allow: /`. No `Sitemap:` line yet — add one when `jekyll-sitemap` goes in. |
@@ -27,7 +27,7 @@
 
 - **Hero photo is a placeholder.** The current hero/og image is a photo of red and blue ink merging in water — chosen deliberately for the moment (it echoes the site's flag-merge palette) but it is **not a photo of the two people in the story**. The original P0 problem HANDOFF v3 raised — "the site has no faces" — is still technically true. Swap in a real photo of the couple when one is ready: replace `assets/img/hero-1400.jpg`, `hero-700.jpg`, and `og.jpg` (same filenames, same dimensions — 1400×764, 700×382, 1200×630 — keeps `index.md` and `_config.yml` untouched), recompress the same way (`convert -strip -interlace Plane -resize <W>x -quality 78`), and update the `alt` text in `index.md` to describe the actual photo instead of the ink swirl.
 - **Unverified hero-photo crop on live.** A screenshot showed the hero image cropped much tighter than intended — narrow width, tall vertical strip, losing the sides of the composition. The CSS math for the full-bleed breakout (`.hero__photo` in `styles.css`) checks out on paper, so the leading theories are a stale cached `styles.css` on the viewer's end, or the CSS/markup not both having been pushed together. **Not yet confirmed against the actual live URL at full browser width with a hard refresh.** The `.hero__photo img` height clamp was already loosened (`34vw` cap instead of `46vw`, `object-position: 50% 55%`) as a hedge either way, but this needs a real check before being called done: open the live URL, hard-refresh, resize the window, and confirm the photo spans full viewport width with `object-fit: cover` only trimming top/bottom, not sides.
-- **`og:image` social card unverified.** Added to config but never actually tested by pasting the URL into a chat client, which is the one way to catch a broken preview before it matters.
+- **Social card: verified at the tag level, not yet in a real client.** `og:image` and `twitter:card: summary_large_image` are confirmed in the deployed HTML, and the image returns HTTP 200 as a 1200×630 JPEG — which is everything a crawler needs. One end-to-end test is still worth doing: paste the live URL into a chat client, since that exercises the crawler rather than the markup.
 - **Old unused `assets/img/hero.jpg`** (604 KB, the original untouched upload) is superseded by `hero-1400.jpg`/`hero-700.jpg` and should be deleted from the repo.
 - **Sitemap** (`jekyll-sitemap` plugin) and a **404.md** page — independent, no blockers, just not done yet.
 
@@ -57,7 +57,7 @@ This is the trigger condition the site owner set: once the first few videos are 
 3. **Never add an `index.html`.** GitHub Pages serves it before `index.md`, silently hiding the whole site. This was the original v1 bug.
 4. **Check `git status -sb` before pushing.** `main` has diverged before. `git reset --soft origin/main` then commit is the safe recovery — never `git push --force`.
 5. **No Ruby in the agent environment** — no local Jekyll preview. The loop is push → `gh run watch` → check the live URL by hand. This is also why the hero-photo crop issue in §2 hasn't been confirmed yet: it can only be verified against the actual deployed page in a real browser, not from the container.
-6. **`{% seo %}` reads `_config.yml`, not the page.** Title, description, and `image` all come from config unless overridden in front matter.
+6. **Title and description come from `_config.yml`. The share image does NOT.** `jekyll-seo-tag` resolves `image` through its `ImageDrop`, which reads `page["image"]` and only that — its four documented sources are `image`, `image.path`, `image.facebook`, `image.twitter`, all page-level. There is **no `site.image` fallback**. A top-level `image:` key in `_config.yml` is silently ignored: no error, no `og:image`, and `twitter:card` degrades from `summary_large_image` to `summary`. Set it via `_config.yml` `defaults:` (which populates front matter) or in the page's own front matter. This cost a full P0 cycle.
 7. **New:** when changing anything in `assets/img/`, keep filenames stable (`hero-1400.jpg`, `hero-700.jpg`, `og.jpg`) so `index.md` and `_config.yml` never need touching for an image swap — just overwrite the files.
 
 ---
@@ -78,7 +78,8 @@ This is the trigger condition the site owner set: once the first few videos are 
 ## 6. Definition of done for v3.4's remaining scope
 
 - [ ] Hero photo crop confirmed correct on the live URL (full width, hard-refreshed)
-- [ ] Social card confirmed in an actual link-preview test
+- [x] Social card live — `og:image` emitted and `twitter:card` is `summary_large_image` (verified in the deployed HTML)
+- [ ] Social card confirmed end-to-end in a real link-preview test
 - [ ] Old unused `assets/img/hero.jpg` removed from the repo
 - [ ] Sitemap and 404 page in place
 - [ ] Story chronology added once the first video is live
