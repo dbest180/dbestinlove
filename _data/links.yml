@@ -4,15 +4,3 @@
   icon: tiktok
   style: primary
   external: true
-
-- label: Instagram
-  sub: Behind-the-scenes & daily life
-  icon: instagram
-  style: soon
-  badge: Soon
-
-- label: YouTube
-  sub: Longer stories & full conversations
-  icon: youtube
-  style: soon
-  badge: Soon

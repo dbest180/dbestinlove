@@ -3,6 +3,15 @@ layout: default
 ---
 
 <header class="hero">
+  <div class="hero__photo reveal">
+    <img
+      src="{{ '/assets/img/hero-1400.jpg' | relative_url }}"
+      srcset="{{ '/assets/img/hero-700.jpg' | relative_url }} 700w, {{ '/assets/img/hero-1400.jpg' | relative_url }} 1400w"
+      sizes="100vw"
+      width="1400" height="764"
+      alt="Red and blue ink swirling together into violet, suspended in a glass bowl of water"
+      loading="eager" fetchpriority="high">
+  </div>
   <p class="kicker">A love story, told out loud</p>
   <h1 class="hero__title">DBest In<br>Love</h1>
   <div class="merge-bar" aria-hidden="true"></div>
