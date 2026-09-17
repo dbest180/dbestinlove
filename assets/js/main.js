@@ -2,10 +2,6 @@
 (function () {
   'use strict';
 
-  // Current year in footer
-  var year = document.getElementById('year');
-  if (year) year.textContent = new Date().getFullYear();
-
   // Scroll-reveal (skipped entirely if reduced motion is preferred)
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var targets = document.querySelectorAll('.reveal');
