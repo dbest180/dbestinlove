@@ -1,173 +1,85 @@
-# HANDOFF — DBest In Love (v3)
+# HANDOFF — DBest In Love (v3.4)
 
 **Repo:** `dbest180/dbestinlove`
 **Live URL:** https://dbest180.github.io/dbestinlove/
 **Stack:** Jekyll → GitHub Pages via Actions (`actions/jekyll-build-pages@v1`)
-**v3 goal:** Make the page convert TikTok traffic — a face, a hook, and a reason to follow.
+**v3.4 status:** Every P0 and P1 item from v3 is implemented. What's left is either quick/independent (P2/P3) or genuinely blocked on video content existing. Only TikTok is live; Instagram/YouTube don't exist yet and nothing should reference them until they do.
 
 ---
 
-## 1. The name
+## 1. What shipped since v3
 
-**"The Plus One Project" is retired.** It read like a product launch, not a person telling you something true. Nobody's first instinct on reading it is *"who are these two?"* — which is the only question that matters when the traffic is arriving from a TikTok story.
-
-**New name: DBest In Love.** It matches the handle `@dbestinlove`, so the bio link and the site reinforce one name instead of splitting recognition across two. Descriptor: **a 10-year long-distance (LDR) journey**.
-
-The name appears in more places than you'd expect. Change all of them together or the site goes inconsistent:
-
-| File | Where |
+| Item | What happened |
 |---|---|
-| `_config.yml` | `title`, `author`, `description` |
-| `index.md` | `<h1 class="hero__title">`, footer copyright line |
-| `assets/css/styles.css` | header comment |
-| `assets/js/main.js` | header comment |
-| `README.md`, `HANDOFF.md` | docs |
-
-**Deliberately unchanged:** the repo name, `baseurl: /dbestinlove`, and therefore the live URL. Every link already sitting in a TikTok bio or a pinned comment keeps working. Don't rename the repo unless you're ready to break those.
-
-**Open decision — where the descriptor lives.** "10 yr LDR journey" currently sits in the meta description (`_config.yml`), not on the page, because the hero already reads *"10 Years Apart"* one line under the title and repeating it reads redundant. If you want it visible, the natural slot is the kicker above the `<h1>` — swap `A love story, told out loud` for `A 10-Year LDR Journey`. Your call.
+| Dead "Soon" buttons | Instagram and YouTube entries removed from `_data/links.yml`. Only TikTok remains. Re-add entries there (with a `url:`) once those accounts exist — that's the only file that needs touching. |
+| Visible handle | Already satisfied — `sub:` on the TikTok button reads `@dbestinlove — new videos weekly`. No action was needed. |
+| Hero photo (P0) | Implemented, but with a **stand-in image**, not a photo of the couple — see §2. Full-bleed above the `<h1>`, `srcset` at 700w/1400w, recompressed to 86 KB / 31 KB from a 604 KB original. |
+| Social card (P0) | `image: /assets/img/og.jpg` added to `_config.yml`; `jekyll-seo-tag` picks it up automatically. 1200×630, 76 KB, cropped from the same stand-in photo. Not yet verified in an actual link-preview test — see §2. |
+| Dead code (P3) | The `document.getElementById('year')` block removed from `assets/js/main.js` — the footer already uses `{{ site.time \| date: "%Y" }}` via Liquid, so this never fired. |
+| `.gitignore` (P3) | Added: `_site/`, `.jekyll-cache/`, `.sass-cache/`. |
+| `robots.txt` (P2) | Added: `User-agent: *` / `Allow: /`. No `Sitemap:` line yet — add one when `jekyll-sitemap` goes in. |
 
 ---
 
-## 2. Where v3 starts
+## 2. Open items, and what's blocking them
 
-Live and verified at commit `5617393`:
+### Needs a person's decision or asset (not blocked on video content)
 
-- White-dominant palette with flag-merge accents (T&T red → plum → Old Glory blue)
-- EB Garamond for story content, Jost for the interface
-- Hero → 3 link buttons → story → footer with Liquid-rendered year
-- `jekyll-seo-tag` wired; canonical and `og:url` correct
-- Build green in ~50 seconds
+- **Hero photo is a placeholder.** The current hero/og image is a photo of red and blue ink merging in water — chosen deliberately for the moment (it echoes the site's flag-merge palette) but it is **not a photo of the two people in the story**. The original P0 problem HANDOFF v3 raised — "the site has no faces" — is still technically true. Swap in a real photo of the couple when one is ready: replace `assets/img/hero-1400.jpg`, `hero-700.jpg`, and `og.jpg` (same filenames, same dimensions — 1400×764, 700×382, 1200×630 — keeps `index.md` and `_config.yml` untouched), recompress the same way (`convert -strip -interlace Plane -resize <W>x -quality 78`), and update the `alt` text in `index.md` to describe the actual photo instead of the ink swirl.
+- **Unverified hero-photo crop on live.** A screenshot showed the hero image cropped much tighter than intended — narrow width, tall vertical strip, losing the sides of the composition. The CSS math for the full-bleed breakout (`.hero__photo` in `styles.css`) checks out on paper, so the leading theories are a stale cached `styles.css` on the viewer's end, or the CSS/markup not both having been pushed together. **Not yet confirmed against the actual live URL at full browser width with a hard refresh.** The `.hero__photo img` height clamp was already loosened (`34vw` cap instead of `46vw`, `object-position: 50% 55%`) as a hedge either way, but this needs a real check before being called done: open the live URL, hard-refresh, resize the window, and confirm the photo spans full viewport width with `object-fit: cover` only trimming top/bottom, not sides.
+- **`og:image` social card unverified.** Added to config but never actually tested by pasting the URL into a chat client, which is the one way to catch a broken preview before it matters.
+- **Old unused `assets/img/hero.jpg`** (604 KB, the original untouched upload) is superseded by `hero-1400.jpg`/`hero-700.jpg` and should be deleted from the repo.
+- **Sitemap** (`jekyll-sitemap` plugin) and a **404.md** page — independent, no blockers, just not done yet.
 
-Everything below is a v3 addition. Nothing here is a bug fix — v2 is clean.
+### Blocked on video content existing
 
----
-
-## 3. v3 action items
-
-### P0 — the page has no faces
-
-`assets/img/hero.jpg` exists: a real **1408×768 JPEG, 604 KB** — and **nothing references it**. The site is a love story with no photograph of the two people in it. For someone who just watched a video and tapped the bio link, that's the single biggest reason to leave.
-
-- [ ] Put a real photo above the fold
-- [ ] Recompress — 604 KB is heavy for a hero; target under 150 KB, and serve two widths
-- [ ] Write `alt` text describing the *moment*, not the file
-- [ ] Consider a second photo in the story section; faces are the whole product here
-
-### P0 — link previews are blank
-
-There is no `og:image`, so pasting the site into a bio, a DM, or a comment yields a bare text card. You are asking people to share a link that looks broken.
-
-- [ ] Make a **1200×630** social card (a frame from the story works fine, with the name set in EB Garamond)
-- [ ] Add `image: /assets/img/og.jpg` to `_config.yml` — `jekyll-seo-tag` picks it up automatically
-- [ ] Test it by pasting the URL into a chat; don't assume
-
-### P1 — two of the three buttons are dead
-
-Instagram and YouTube render as dashed "Soon" placeholders with no `url:`. They sit directly beneath the primary CTA, in the most valuable real estate on the page, and they advertise absence. Pick one:
-
-- [ ] Delete them until the accounts exist (cleanest), **or**
-- [ ] Point them at the TikTok profile for now, **or**
-- [ ] Change `sub:` to something that earns the click ("Coming once we're settled")
-
-### P1 — every path should end at the same action
-
-The page has three exits to TikTok and one dead end at the bottom. Make the follow impossible to miss:
-
-- [ ] Keep the primary button in the merge gradient — it's working
-- [ ] Add the handle `@dbestinlove` as visible text somewhere; people search the handle, not the URL
-- [ ] Make sure the `text-link` CTA at the end of the story is genuinely the last thing people read
-
-### P1 — the story needs a "start here"
-
-TikTok viewers arrive mid-story, out of order, with no idea which video was first. The story section is four paragraphs of prose with no entry point.
-
-- [ ] Add a short chronology (years, or "chapter" markers) so a new arrival can orient in seconds
-- [ ] Consider naming the first video, so the page can say "start with this one"
-
-### P2 — discoverability
-
-- [ ] Add `jekyll-sitemap` to `plugins:` in `_config.yml`
-- [ ] Add a `robots.txt`
-- [ ] In **Settings → Pages**, confirm the source is still *GitHub Actions*
-
-### P2 — no 404 page
-
-A bad link currently gets GitHub's default. A one-line `404.md` with the same layout and a link home is nearly free.
-
-### P2 — font payload
-
-Two Google Fonts families, nine weights, render-blocking. Fine now, worth revisiting if you add analytics and see a slow mobile load: self-host or subset to the weights actually used.
-
-### P3 — dead code
-
-`assets/js/main.js` still looks for `document.getElementById('year')` — a footer span v2 deleted. It's guarded and harmless, but it's the last v1 remnant in the tree.
-
-- [ ] Delete those two lines
-
-### P3 — no `.gitignore`
-
-There isn't one. Run `jekyll build` locally and `_site/` appears untracked, one careless `git add -A` away from being committed.
-
-- [ ] Add `.gitignore` with `_site/`, `.jekyll-cache/`, `.sass-cache/`
-
-### P3 — repo hygiene
-
-`HANDOFF.md` is committed to a **public** repo. It's in `_config.yml`'s `exclude:`, so it is *not* served as part of the site — but it is readable in the repo and its history. If you'd rather it weren't:
-
-```bash
-git rm --cached HANDOFF.md && echo "HANDOFF.md" >> .gitignore
-```
+- **Story "start here" chronology.** Deliberately held per the site owner's call: don't touch the `.story` section's structure until at least the first video is posted. See §3 — this is the main thing a future agent should pick up once that happens.
+- **Re-evaluating the hero/social-card photo choice** once real footage exists to pull a still from, if a dedicated photo of the couple still isn't available by then.
 
 ---
 
-## 4. Gotchas — each of these already cost time once
+## 3. For whoever picks this up once videos and scripts are ready
 
-**1. kramdown does not parse markdown inside HTML blocks.** The default is `parse_block_html: false`. Text inside `<section>` or `<div>` is passed through raw: paragraphs never become `<p>`, and `[links](...)` stay literal. The story section is written as explicit `<p>` and `<em>` for exactly this reason. To use markdown inside HTML, add `markdown="1"` to the tag, or set `parse_block_html: true` in `_config.yml`.
+This is the trigger condition the site owner set: once the first few videos are drafted/posted, the story section should be updated to reflect them. When that happens:
 
-**2. `url` must not include `baseurl`.** It's `url: "https://dbest180.github.io"` + `baseurl: "/dbestinlove"`. Put the path in both and every canonical and `og:url` becomes `/dbestinlove/dbestinlove`. This was live once.
+1. **Get the video order and titles/topics** from the owner — the story section needs to tell a new TikTok arrival "start with this one."
+2. **Add a short chronology to the `.story` section in `index.md`** — years or "chapter" markers, per the original HANDOFF ask. Keep it consistent with the existing prose style (EB Garamond, first-person plural, understated) rather than turning it into a bullet list; this site's whole voice is quiet and literary, not marketing copy.
+3. **Check whether the hero/social-card photo should change too** — if by then there's a real photo of the couple (from a video still or otherwise), replace the ink-swirl stand-in per §2's instructions.
+4. **Re-test the social card** after any image swap — paste the live URL into a chat client and confirm the preview renders.
+5. **Leave Instagram/YouTube alone** unless those accounts now exist. If they do, re-add entries to `_data/links.yml` with real `url:` values — don't restore the dashed "Soon" placeholders.
 
-**3. Never add an `index.html`.** GitHub Pages serves `index.html` *before* `index.md`, which hides the entire Jekyll homepage with no error anywhere. That exact file was the original v1 bug — 146 lines of mockup silently winning over the real site.
+---
 
-**4. Check `git status -sb` before pushing.** `main` has already diverged once: the local clone was 6 commits behind *and* 1 ahead, with both sides having independently "fixed" the same problems. A plain push gets rejected; a force push would have destroyed the other side. The move that loses nothing is `git reset --soft origin/main` then commit — it replays your tree on top of the remote and stays a fast-forward. **Never `git push --force` to this branch.**
+## 4. Gotchas (carried forward, still true)
 
-**5. No Ruby in the agent environment.** Jekyll isn't installed, so there's no local preview — the loop is push → watch the Action → read the live URL. Run `gh run watch` to follow a build. For a real local preview:
-
-```bash
-bundle install
-bundle exec jekyll serve --baseurl ""
-```
-
-The empty `--baseurl` matters, or every asset 404s on localhost.
-
-**6. A `Gemfile` is not load-bearing.** An earlier version of this document claimed the build fails on `jekyll-seo-tag` without one — it doesn't; several builds passed before it existed. Keep it for version pinning, but don't debug builds as if it were required.
-
-**7. `{% seo %}` reads `_config.yml`, not the page.** Title, description, and image all come from config unless overridden in front matter. Changing the name there changes every share preview.
+1. **kramdown does not parse markdown inside HTML blocks.** `parse_block_html: false` is the default. Text inside `<section>` or `<div>` needs real `<p>`/`<em>` tags, not `*markdown*` syntax.
+2. **`url` in `_config.yml` must not include `baseurl`.** `url: "https://dbest180.github.io"` + `baseurl: "/dbestinlove"`. Doubling the path breaks every canonical tag and share preview. This was live once.
+3. **Never add an `index.html`.** GitHub Pages serves it before `index.md`, silently hiding the whole site. This was the original v1 bug.
+4. **Check `git status -sb` before pushing.** `main` has diverged before. `git reset --soft origin/main` then commit is the safe recovery — never `git push --force`.
+5. **No Ruby in the agent environment** — no local Jekyll preview. The loop is push → `gh run watch` → check the live URL by hand. This is also why the hero-photo crop issue in §2 hasn't been confirmed yet: it can only be verified against the actual deployed page in a real browser, not from the container.
+6. **`{% seo %}` reads `_config.yml`, not the page.** Title, description, and `image` all come from config unless overridden in front matter.
+7. **New:** when changing anything in `assets/img/`, keep filenames stable (`hero-1400.jpg`, `hero-700.jpg`, `og.jpg`) so `index.md` and `_config.yml` never need touching for an image swap — just overwrite the files.
 
 ---
 
 ## 5. What not to do
 
-- **Don't re-add the newsletter section.** Its removal in v2 was deliberate. The follow action is TikTok; a signup form is a second, weaker ask.
-- **Don't add an `index.html`.** Ever. See gotcha 3.
-- **Don't hardcode the year** in the footer. `{{ site.time | date: "%Y" }}` is already correct.
-- **Don't rename the repo or `baseurl`** without accepting that old links break.
-- **Don't commit `_site/`.**
-- **Don't swap the type back.** EB Garamond for story, Jost for interface is the v3 decision — the split is what makes the page read like writing rather than an app.
+- Don't re-add the newsletter section (removed deliberately in v2).
+- Don't add an `index.html`.
+- Don't hardcode the footer year — `{{ site.time | date: "%Y" }}` is correct.
+- Don't rename the repo or `baseurl`.
+- Don't commit `_site/`.
+- Don't swap the type pairing back (EB Garamond for story / Jost for interface).
+- Don't restore Instagram/YouTube "Soon" placeholders — delete-until-real was the explicit decision this round.
+- Don't touch the story section's structure before a video is actually posted — that's a deliberate hold, not an oversight.
 
 ---
 
-## 6. Definition of done for v3
+## 6. Definition of done for v3.4's remaining scope
 
-- [ ] A real photo above the fold
-- [ ] The social card renders in a link preview
-- [ ] No dead "Soon" buttons
-- [ ] Sitemap and 404 in place
-- [ ] Build green, and the live URL opened by hand — not just the Action log
-
-```bash
-# catches a half-finished rename
-grep -rin "the plus one project" --exclude-dir=.git --exclude-dir=_site --exclude=HANDOFF.md .
-```
-
-Search the bare phrase `plus one` instead and you'll get one hit in `index.md`: *"we stopped being each other's plus one and became each other's home."* That one is deliberate — it's a common noun, it's a good line, and it reads true under any name. Leave it.
+- [ ] Hero photo crop confirmed correct on the live URL (full width, hard-refreshed)
+- [ ] Social card confirmed in an actual link-preview test
+- [ ] Old unused `assets/img/hero.jpg` removed from the repo
+- [ ] Sitemap and 404 page in place
+- [ ] Story chronology added once the first video is live
+- [ ] Real photo of the couple in place, if/when available, replacing the ink-swirl stand-in
