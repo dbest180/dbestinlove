@@ -6,7 +6,6 @@ description: >-
   apart — this is our love story.
 author: DBest In Love
 tiktok: https://www.tiktok.com/@dbestinlove
-image: /assets/img/og.jpg
 
 # GitHub Pages
 url: "https://dbest180.github.io"
@@ -15,6 +14,16 @@ baseurl: "/dbestinlove"
 markdown: kramdown
 plugins:
   - jekyll-seo-tag
+
+# The social share image. jekyll-seo-tag reads the image from the PAGE, not from
+# a top-level site key — a bare `image:` above does nothing and silently emits no
+# og:image (twitter:card falls back to "summary"). Front-matter defaults are the
+# only way to set it once for every page. See HANDOFF.md gotcha 6.
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/img/og.jpg
 
 exclude:
   - README.md
