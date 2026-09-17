@@ -110,8 +110,9 @@ a:hover { color: var(--tt-red); }
 }
 .hero__photo img {
   width: 100%;
-  height: clamp(220px, 46vw, 460px);
+  height: clamp(200px, 34vw, 380px);
   object-fit: cover;
+  object-position: 50% 55%;
 }
 .kicker {
   font-size: 0.72rem;
