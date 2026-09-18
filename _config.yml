@@ -15,10 +15,10 @@ markdown: kramdown
 plugins:
   - jekyll-seo-tag
 
-# The social share image. jekyll-seo-tag reads the image from the PAGE, not from
-# a top-level site key — a bare `image:` above does nothing and silently emits no
-# og:image (twitter:card falls back to "summary"). Front-matter defaults are the
-# only way to set it once for every page. See HANDOFF.md gotcha 6.
+# The social share image. jekyll-seo-tag reads the image from the PAGE, not
+# from a top-level site key — a bare `image:` here does nothing and silently
+# emits no og:image (twitter:card falls back to "summary"). Front-matter
+# defaults are the only way to set it once for every page. See HANDOFF gotcha 6.
 defaults:
   - scope:
       path: ""
