@@ -61,23 +61,33 @@ HTTP 200  5462 bytes at http://127.0.0.1:4000/
 
 ## 2. Where the agent's tooling lives
 
-Nothing is stored in the repo any more. `du -sh .` inside the project is 3.0 MB, down from 790 MB.
+**This depends on the file policy, and the two are coupled.** Anything the agent must *write* has to be inside the session workspace whenever the policy is `workspace-write`:
 
-| What | Where | Why |
+| What | `danger-full-access` | `workspace-write` (current) |
 |---|---|---|
-| Jekyll toolchain | system-wide (`/var/lib/gems/3.3.0`) | installed as root; usable by any user |
-| Playwright node module + driver scripts | `~/.local/share/dsh-pw/` | keeps the repo clean |
-| Chromium headless shell 153 | `~/.cache/ms-playwright/` | Playwright's **default** path, so no `PLAYWRIGHT_BROWSERS_PATH` is needed |
-| Screenshots | `~/.local/share/dsh-pw/shots/` | for a human to review |
+| Jekyll toolchain | system-wide — works either way | system-wide — works either way |
+| ImageMagick, Pillow, PyYAML, yamllint, optipng, jpegoptim, cwebp, rsvg-convert | system-wide — works either way | system-wide — works either way |
+| Chromium + Playwright browsers | `~/.cache/ms-playwright/` | same — **read-only is fine**, browsers only need to be readable |
+| Playwright *module*, driver script, screenshots | `~/.local/share/dsh-pw/` | **`.tools/pw/` and `.tools/shots/`** — outputs must be writable |
 
-Screenshots of the live page at 400 / 768 / 900 / 1400 / 1920px are in `~/.local/share/dsh-pw/shots/`. **The agent cannot view them** — see §4.
+So: reads from `$HOME` work under either policy; **writes** do not. The 660 MB browser payload stays in `~/.cache` and is never copied — only the 20 MB module and its outputs come into the repo, and `.tools/` is gitignored.
 
 Measure the deployed page at any width:
 
 ```bash
-cd ~/.local/share/dsh-pw
-node shot.js "https://dbest180.github.io/dbestinlove/" "./shots"
+cd .tools/pw
+node shot.js "https://dbest180.github.io/dbestinlove/" "$PWD/../shots"
 ```
+
+### Gotcha: leaked environment variables survive policy changes
+
+Earlier setup exported `GEM_HOME`, `GEM_SPEC_CACHE`, `XDG_CACHE_HOME`, `npm_config_cache`, `PLAYWRIGHT_BROWSERS_PATH` and `JEKYLL_NO_BUNDLER_REQUIRE`. **These persisted into the session environment** and outlived the directories they pointed at. When the policy reverted to `workspace-write`, Playwright broke looking for `.tools/browsers` — a directory that no longer existed.
+
+`.tools/pw/shot.js` now defends itself: if the configured browsers path does not exist, it falls back to `~/.cache/ms-playwright`. Note the ordering trap — **Playwright resolves browser paths at `require()` time, not at `launch()`**, so the override has to be set before the `require('playwright')` line or it silently does nothing.
+
+If a future session sees odd tool behaviour, check `env` for stale workspace paths first.
+
+Screenshots of the live page at 400 / 768 / 900 / 1400 / 1920px are written to `.tools/shots/`.
 
 ---
 
