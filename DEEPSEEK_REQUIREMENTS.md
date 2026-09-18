@@ -1,6 +1,6 @@
 # DEEPSEEK_REQUIREMENTS.md
 
-**Status: satisfied.** Every installable item in this document is now installed and verified against this project. One item remains and it is not an install — see §4.
+**Status: fully satisfied.** Every item in this document — including the one that was not an install — is now in place. The vision toolkit arrived, so the agent can see images (§4).
 
 This file started as a request for help, because the agent could not install its own packages. That constraint is gone. It is now a **record of the environment and a recipe to rebuild it**, which is what makes it worth keeping.
 
@@ -124,32 +124,27 @@ If you have to do this, re-add `.tools/` to `.gitignore`.
 
 ---
 
-## 4. The one remaining gap — and it is not an install
+## 4. ✅ Resolved — the agent can see images
 
-**The agent cannot read images.**
+**The vision toolkit landed.** `read_image` still refuses on this model (*"does not declare image input"*), but the `vision-skills` toolkit routes images to a configured vision service instead, which closes the gap without needing a different model.
 
-```bash
-$ node shot.js ...        # works: screenshots captured, DOM measured
-$ # but reading one back:
-Error: model "deepseek-v4-flash" does not declare image input;
-       switch to an image-capable model to read images
-```
+Available now: `vision_glance` (describe / answer / OCR), `vision_ground` (locate a named thing), `vision_detect` (enumerate a kind), `vision_crop`, `vision_dominant_colors`, `vision_pixel_diff`, `vision_trace` (exact geometry, local), `vision_extract_foreground`, `vision_html_screenshot`, `vision_long_screenshot_ocr`.
 
-So the agent has a camera and no eyes. Screenshots land on disk and only a human can interpret them.
+**Why it matters here.** The hero-crop question was settled by DOM measurement, which was a *better* instrument than looking — but measurement only answers questions that can be phrased numerically. It cannot say *"the type looks wrong"* or *"that photo is unflattering."* This can.
 
-This is survivable but asymmetric. For the hero-crop question this project carried, DOM measurement was a *better* instrument than looking — `getBoundingClientRect`, resolved `object-fit`, overflow on each axis at five widths gave a definitive answer that a glance might not have. But measurement cannot tell anyone *"the type looks wrong,"* *"that photo is unflattering,"* or *"the composition is off."*
+**First real findings** — on `hero-700.jpg`, confirmed by sha256 `eb77998d…`:
 
-**Options, best first:**
+- The image's "white" is **#ECF2F5** and **#D8DFE5** — a cool blue-grey, not the page's `#FFFFFF`. A large cool-grey photo on a pure-white page can read as a faint grey band.
+- **No brand colour appears in it.** The palette is dusty and desaturated: darkest tone `#4D1333` (wine), mid `#6D4472` (plum), then `#8B7F9A` and `#B5BED3` (muted blue). Flag red `#DA1A35` and Old Glory blue `#3C3B6E` scored **0%** against it. The image *echoes* the merge palette rather than matching it.
+- The letterbox a desktop visitor sees (1400×380, cut per `object-position: 50% 55%`) **reads well**: the focal knot is fully visible and not crowded by an edge, and the curved glass bowl walls at both ends give it a natural frame.
 
-1. **Run agent sessions on an image-capable model.** The visual loop closes entirely. Highest-leverage change available on this project.
-2. **Expose a vision-capable subagent** the agent can hand a PNG to. Partial, but enough for spot checks.
-3. **Leave it.** The agent keeps producing screenshots and says plainly when a judgement is beyond measurement rather than guessing.
+**Caveat that still stands:** `vision_glance` prose is not a measurement. Exact colours come from `vision_dominant_colors`, exact geometry from `vision_trace`, exact differences from `vision_pixel_diff`. Never take a description's word for a styling fact.
 
 ---
 
 ## 5. Harness asks
 
-1. **An image-capable model** (§4). This is the only outstanding item in this document.
+1. **Nothing outstanding.** The vision toolkit closed the last gap (§4) — visual work no longer routes through a human.
 2. Keep `danger-full-access` if you can. It removed 790 MB from the repo and turned a five-`export` install command into a one-liner.
 3. Network egress is sufficient — nothing to enable.
 
